@@ -1,0 +1,800 @@
+/* ============================================================
+   UrbanStep · hoja de estilos
+
+   Identidad: calle, no sastreria. Base oscura de asfalto con acentos
+   de neon, como un aviso luminoso de noche. Las superficies flotan
+   sobre el fondo en vez de dibujarse con bordes marcados.
+
+   Interaccion: los elementos accionables se LEVANTAN al pasar el
+   cursor y encienden un halo del color de su neon. Lo que no se puede
+   pulsar no se mueve nunca: si todo se levanta, el gesto deja de
+   significar "esto hace algo".
+
+   Todos los nombres de clase se conservan de la version anterior para
+   no tener que tocar las JSP.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    /* --- superficies --- */
+    --asfalto:  #0B0E14;   /* fondo general, casi negro azulado */
+    --noche:    #121722;   /* superficie elevada */
+    --grafito:  #1A2130;   /* superficie mas clara, tarjetas */
+    --borde:    #263042;   /* separaciones sutiles */
+    --niebla:   #8C99AE;   /* texto secundario */
+    --hueso:    #EDF1F7;   /* texto principal */
+
+    /* --- neones --- */
+    --lima:     #C6FF3D;   /* acento principal: accion, marca */
+    --cian:     #29E5D4;   /* informacion, progreso */
+    --magenta:  #FF3D7F;   /* alerta, error, rechazo */
+    --violeta:  #8B5CFF;   /* secundario, categorias */
+    --ambar:    #FFB43D;   /* advertencia, pendiente */
+
+    /* --- compatibilidad con los nombres anteriores --- */
+    --tinta:    var(--asfalto);
+    --indigo:   var(--violeta);
+    --papel:    var(--noche);
+    --tiza:     var(--grafito);
+    --hilo:     var(--lima);
+    --carmin:   var(--magenta);
+    --verde:    var(--cian);
+    --linea:    var(--borde);
+
+    --halo-lima:    0 0 0 1px rgba(198,255,61,.4), 0 8px 28px -6px rgba(198,255,61,.45);
+    --halo-cian:    0 0 0 1px rgba(41,229,212,.4), 0 8px 28px -6px rgba(41,229,212,.45);
+    --halo-magenta: 0 0 0 1px rgba(255,61,127,.4), 0 8px 28px -6px rgba(255,61,127,.45);
+    --curva: cubic-bezier(.2, .8, .2, 1);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+body {
+    background: var(--asfalto);
+    color: var(--hueso);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+    /* Resplandores muy tenues en las esquinas: dan profundidad sin
+       competir con el contenido. */
+    background-image:
+        radial-gradient(900px 500px at 12% -8%, rgba(198,255,61,.07), transparent 60%),
+        radial-gradient(800px 500px at 92% 4%, rgba(139,92,255,.09), transparent 60%);
+    background-attachment: fixed;
+}
+
+h1, h2, h3, .display {
+    font-family: 'Archivo Black', 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--hueso);
+}
+h1 { font-size: clamp(2rem, 4.5vw, 3.4rem); }
+h2 { font-size: clamp(1.3rem, 2.4vw, 1.9rem); }
+
+a { color: var(--cian); text-decoration: none; transition: color .18s var(--curva); }
+a:hover { color: var(--lima); }
+
+.text-muted { color: var(--niebla) !important; }
+
+.dato {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .78rem;
+    letter-spacing: -0.01em;
+}
+
+.rotulo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--niebla);
+}
+
+.acento { color: var(--lima); }
+.resalta { color: var(--lima); }
+
+.cifra {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 2.1rem;
+    line-height: 1;
+    color: var(--hueso);
+}
+.cifra.acento { color: var(--lima); text-shadow: 0 0 24px rgba(198,255,61,.35); }
+
+.precio {
+    font-family: 'Archivo Black', sans-serif;
+    color: var(--lima);
+    letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   Barra superior
+   ============================================================ */
+.barra {
+    background: rgba(11,14,20,.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--borde);
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+}
+
+.navbar-brand {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+    color: var(--hueso) !important;
+    transition: text-shadow .25s var(--curva);
+}
+.navbar-brand span { color: var(--lima); }
+.navbar-brand:hover { text-shadow: 0 0 22px rgba(198,255,61,.55); }
+
+.barra .nav-link {
+    color: var(--niebla) !important;
+    font-size: .92rem;
+    font-weight: 500;
+    padding: .4rem .8rem !important;
+    border-radius: 8px;
+    position: relative;
+    transition: color .18s var(--curva), transform .18s var(--curva);
+}
+.barra .nav-link:hover {
+    color: var(--hueso) !important;
+    transform: translateY(-2px);
+}
+/* Subrayado de neon que crece desde el centro */
+.barra .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%; right: 50%; bottom: 2px;
+    height: 2px;
+    background: var(--lima);
+    border-radius: 2px;
+    transition: left .22s var(--curva), right .22s var(--curva);
+}
+.barra .nav-link:hover::after { left: .8rem; right: .8rem; }
+
+/* ============================================================
+   Cinta: el elemento de firma, ahora como cebra de paso peatonal
+   ============================================================ */
+.cinta {
+    height: 14px;
+    border-radius: 999px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--lima) 0 18px,
+        transparent 18px 34px
+    );
+    opacity: .85;
+}
+.cinta-fina {
+    height: 1px;
+    border-radius: 0;
+    background: linear-gradient(90deg,
+        transparent, var(--borde) 12%, var(--borde) 88%, transparent);
+    opacity: 1;
+}
+
+/* ============================================================
+   Superficies
+   ============================================================ */
+.ficha, .tablero, .bloque-dato, .sugerencia, .clave-sugerida, .aviso-inventario {
+    background: var(--grafito);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+}
+
+/* Las tarjetas de producto son accionables: se levantan. */
+.ficha {
+    overflow: hidden;
+    transition: transform .28s var(--curva), box-shadow .28s var(--curva),
+                border-color .28s var(--curva);
+}
+.ficha:hover {
+    transform: translateY(-6px);
+    border-color: rgba(198,255,61,.35);
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,.9), var(--halo-lima);
+}
+
+/* Los tableros muestran cifras; no llevan a ningun lado, asi que se
+   iluminan pero no se mueven. */
+.tablero {
+    padding: 1.1rem 1.2rem;
+    transition: border-color .28s var(--curva), box-shadow .28s var(--curva);
+}
+.tablero:hover {
+    border-color: rgba(41,229,212,.35);
+    box-shadow: var(--halo-cian);
+}
+
+.bloque-dato { border-left: 3px solid var(--borde); }
+.bloque-dato.publico     { border-left-color: var(--cian); }
+.bloque-dato.semiprivado { border-left-color: var(--violeta); }
+.bloque-dato.privado     { border-left-color: var(--ambar); }
+.bloque-dato.sensible    { border-left-color: var(--magenta); }
+
+.oculto-por-politica {
+    background: rgba(255,61,127,.07);
+    border: 1px dashed rgba(255,61,127,.4);
+    border-radius: 10px;
+    padding: .8rem 1rem;
+    color: var(--niebla);
+    font-size: .86rem;
+}
+
+/* ============================================================
+   Portada
+   ============================================================ */
+.portada {
+    position: relative;
+    overflow: hidden;
+    padding: 5.5rem 0 4.5rem;
+    background:
+        radial-gradient(700px 380px at 78% 20%, rgba(139,92,255,.22), transparent 65%),
+        radial-gradient(600px 340px at 15% 85%, rgba(198,255,61,.16), transparent 65%),
+        var(--noche);
+    border-bottom: 1px solid var(--borde);
+}
+.portada h1 { color: var(--hueso); }
+.portada .resalta {
+    color: var(--lima);
+    text-shadow: 0 0 40px rgba(198,255,61,.45);
+}
+/* Rejilla de fondo: asfalto marcado */
+.portada .patron {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(140,153,174,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(140,153,174,.07) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);
+    z-index: 1;
+}
+.portada .contenido { position: relative; z-index: 2; }
+
+/* ============================================================
+   Imagenes de producto
+   ============================================================ */
+.ficha-imagen {
+    aspect-ratio: 4 / 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    letter-spacing: .1em;
+    color: rgba(11,14,20,.65);
+    background: linear-gradient(135deg, var(--violeta), var(--cian));
+}
+.ficha-imagen.calzado { background: linear-gradient(135deg, var(--lima), var(--cian)); }
+
+.ficha-foto, .foto-producto {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    background: var(--noche);
+    transition: transform .5s var(--curva);
+}
+.ficha-foto { aspect-ratio: 4 / 5; }
+.ficha:hover .ficha-foto { transform: scale(1.06); }
+.foto-producto {
+    max-height: 460px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+}
+.vista-previa {
+    width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    background: var(--noche);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: .5rem;
+}
+.miniatura {
+    width: 48px; height: 48px;
+    object-fit: cover;
+    display: block;
+    background: var(--noche);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+}
+.miniatura.vacia {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .58rem;
+    color: var(--niebla);
+}
+.fila-inactiva { opacity: .45; }
+
+/* ============================================================
+   Botones: se levantan y encienden
+   ============================================================ */
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: .92rem;
+    letter-spacing: .01em;
+    padding: .55rem 1.15rem;
+    border: 1px solid transparent;
+    transition: transform .2s var(--curva), box-shadow .2s var(--curva),
+                background-color .2s var(--curva), color .2s var(--curva),
+                border-color .2s var(--curva);
+}
+.btn:active { transform: translateY(0) scale(.985); }
+.btn:focus-visible { outline: 2px solid var(--cian); outline-offset: 2px; }
+
+/* Accion principal */
+.btn-hilo {
+    background: var(--lima);
+    color: #0B0E14;
+    border-color: var(--lima);
+}
+.btn-hilo:hover {
+    background: #D4FF63;
+    color: #0B0E14;
+    transform: translateY(-3px);
+    box-shadow: var(--halo-lima);
+}
+
+/* Accion sobria */
+.btn-tinta {
+    background: var(--grafito);
+    color: var(--hueso);
+    border-color: var(--borde);
+}
+.btn-tinta:hover {
+    background: var(--noche);
+    color: var(--cian);
+    border-color: rgba(41,229,212,.5);
+    transform: translateY(-3px);
+    box-shadow: var(--halo-cian);
+}
+
+/* Accion secundaria */
+.btn-contorno {
+    background: transparent;
+    color: var(--hueso);
+    border-color: var(--borde);
+}
+.btn-contorno:hover {
+    background: rgba(198,255,61,.08);
+    color: var(--lima);
+    border-color: rgba(198,255,61,.5);
+    transform: translateY(-3px);
+    box-shadow: var(--halo-lima);
+}
+
+.btn-link { color: var(--niebla); text-decoration: none; }
+.btn-link:hover { color: var(--lima); }
+
+/* ============================================================
+   Formularios
+   ============================================================ */
+.form-control, .form-select {
+    background: var(--noche);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    color: var(--hueso);
+    transition: border-color .2s var(--curva), box-shadow .2s var(--curva);
+}
+.form-control::placeholder { color: #5D6880; }
+.form-control:focus, .form-select:focus {
+    background: var(--noche);
+    color: var(--hueso);
+    border-color: var(--lima);
+    box-shadow: 0 0 0 3px rgba(198,255,61,.16);
+}
+.form-label { color: var(--niebla); font-weight: 500; }
+.form-check-input {
+    background-color: var(--noche);
+    border-color: var(--borde);
+}
+.form-check-input:checked {
+    background-color: var(--lima);
+    border-color: var(--lima);
+}
+.form-check-label { color: var(--hueso); }
+
+/* ============================================================
+   Tablas
+   ============================================================ */
+.tabla-taller {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--hueso);
+    color: var(--hueso);
+    border-color: var(--borde);
+}
+.tabla-taller thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .66rem;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--niebla);
+    border-bottom: 1px solid var(--borde);
+    background: transparent;
+    padding-bottom: .6rem;
+}
+.tabla-taller td, .tabla-taller th {
+    border-color: var(--borde);
+    vertical-align: middle;
+}
+.tabla-taller tbody tr {
+    transition: background-color .18s var(--curva);
+}
+.tabla-taller tbody tr:hover { background: rgba(255,255,255,.03); }
+
+/* ============================================================
+   Etiquetas: niveles y estados
+   ============================================================ */
+.nivel, .estado, .chip {
+    display: inline-block;
+    padding: .16rem .55rem;
+    border-radius: 999px;
+    border: 1px solid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .64rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    white-space: nowrap;
+}
+.nivel-publico     { color: var(--cian);    border-color: rgba(41,229,212,.45);  background: rgba(41,229,212,.08); }
+.nivel-semiprivado { color: var(--violeta); border-color: rgba(139,92,255,.45);  background: rgba(139,92,255,.08); }
+.nivel-privado     { color: var(--ambar);   border-color: rgba(255,180,61,.45);  background: rgba(255,180,61,.08); }
+.nivel-sensible    { color: var(--magenta); border-color: rgba(255,61,127,.45);  background: rgba(255,61,127,.08); }
+
+.estado-cotizacion           { color: var(--violeta); border-color: rgba(139,92,255,.45); background: rgba(139,92,255,.08); }
+.estado-pendiente_aprobacion { color: var(--ambar);   border-color: rgba(255,180,61,.45); background: rgba(255,180,61,.08); }
+.estado-aprobado             { color: var(--lima);    border-color: rgba(198,255,61,.45); background: rgba(198,255,61,.08); }
+.estado-rechazado            { color: var(--magenta); border-color: rgba(255,61,127,.45); background: rgba(255,61,127,.08); }
+.estado-cancelado            { color: var(--niebla);  border-color: var(--borde);         background: rgba(140,153,174,.08); }
+.estado-pago_en_verificacion { color: var(--ambar);   border-color: rgba(255,180,61,.45); background: rgba(255,180,61,.08); }
+.estado-pagado               { color: var(--cian);    border-color: rgba(41,229,212,.45); background: rgba(41,229,212,.08); }
+.estado-en_preparacion       { color: var(--cian);    border-color: rgba(41,229,212,.45); background: rgba(41,229,212,.08); }
+.estado-despachado           { color: var(--violeta); border-color: rgba(139,92,255,.45); background: rgba(139,92,255,.08); }
+.estado-entregado            { color: var(--lima);    border-color: rgba(198,255,61,.45); background: rgba(198,255,61,.12); }
+
+.chip-alerta {
+    color: #0B0E14;
+    background: var(--magenta);
+    border-color: var(--magenta);
+    font-weight: 700;
+}
+
+.globo {
+    display: inline-block;
+    min-width: 1.3rem;
+    padding: .05rem .4rem;
+    margin-left: .3rem;
+    border-radius: 999px;
+    background: var(--lima);
+    color: #0B0E14;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .66rem;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 0 14px rgba(198,255,61,.5);
+}
+
+/* ============================================================
+   Barras y medidores
+   ============================================================ */
+.barra-medida {
+    background: rgba(255,255,255,.06);
+    height: 20px;
+    border-radius: 999px;
+    overflow: hidden;
+}
+.barra-medida > span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--violeta), var(--cian));
+    box-shadow: 0 0 16px rgba(41,229,212,.4);
+    transition: width .5s var(--curva);
+}
+.barra-medida.buena > span {
+    background: linear-gradient(90deg, var(--cian), var(--lima));
+    box-shadow: 0 0 16px rgba(198,255,61,.4);
+}
+.barra-medida.mala > span {
+    background: linear-gradient(90deg, #B32A5C, var(--magenta));
+    box-shadow: 0 0 16px rgba(255,61,127,.4);
+}
+
+.medidor { height: 6px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+.medidor-relleno {
+    height: 100%; width: 0; border-radius: 999px;
+    background: var(--magenta);
+    transition: width .2s var(--curva), background-color .2s var(--curva);
+}
+.medidor-relleno.muy-debil { background: var(--magenta); }
+.medidor-relleno.debil     { background: #FF7A3D; }
+.medidor-relleno.aceptable { background: var(--ambar); }
+.medidor-relleno.buena     { background: var(--cian); }
+.medidor-relleno.excelente { background: var(--lima); box-shadow: 0 0 14px rgba(198,255,61,.6); }
+
+.medidor-texto { display: inline-block; margin-top: .35rem; font-size: .72rem; }
+.medidor-texto.muy-debil, .medidor-texto.debil { color: var(--magenta); }
+.medidor-texto.aceptable { color: var(--ambar); }
+.medidor-texto.buena, .medidor-texto.excelente { color: var(--lima); }
+
+.avisos-clave {
+    list-style: none; padding: 0; margin: .4rem 0 0;
+    font-size: .74rem; color: var(--magenta);
+}
+.avisos-clave li::before { content: "— "; }
+.avisos-clave li.ok { color: var(--lima); }
+.avisos-clave li.ok::before { content: "✓ "; }
+
+.clave-sugerida { padding: .6rem .8rem; border-left: 3px solid var(--lima); margin-top: .5rem; }
+.clave-sugerida-texto {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: .08em;
+    color: var(--lima);
+    word-break: break-all;
+}
+.clave-sugerida-nota { display: block; margin-top: .3rem; font-size: .72rem; color: var(--niebla); }
+
+/* ============================================================
+   Sugerencias del reporte
+   ============================================================ */
+.sugerencia { border-left: 4px solid var(--borde); }
+.sugerencia.alta  { border-left-color: var(--magenta); }
+.sugerencia.media { border-left-color: var(--ambar); }
+.sugerencia.baja  { border-left-color: var(--lima); }
+
+.estrellas { color: var(--ambar); letter-spacing: .08em; }
+
+/* ============================================================
+   Seguimiento del pedido
+   ============================================================ */
+.ruta { display: flex; flex-wrap: wrap; padding-top: 1rem; }
+.ruta-paso { flex: 1 1 120px; position: relative; padding-right: .5rem; }
+.ruta-paso::before {
+    content: ""; position: absolute; top: 6px; left: 0; right: 0;
+    height: 2px; background: var(--borde);
+}
+.ruta-paso.hecho::before {
+    background: var(--lima);
+    box-shadow: 0 0 12px rgba(198,255,61,.5);
+}
+.ruta-punto {
+    position: relative; display: block;
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--borde); background: var(--noche); z-index: 1;
+}
+.ruta-paso.hecho .ruta-punto {
+    border-color: var(--lima); background: var(--lima);
+    box-shadow: 0 0 16px rgba(198,255,61,.7);
+}
+.ruta-texto { display: block; margin-top: .5rem; font-size: .72rem; color: var(--niebla); }
+.ruta-paso.hecho .ruta-texto { color: var(--hueso); font-weight: 600; }
+
+/* ============================================================
+   Avisos
+   ============================================================ */
+.aviso-flash, .alert {
+    background: var(--grafito);
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--lima);
+    border-radius: 12px;
+    color: var(--hueso);
+    padding: .8rem 1.1rem;
+}
+.aviso-inventario { border-left: 4px solid var(--magenta); }
+.aviso-inventario ul { padding-left: 1.1rem; }
+.aviso {
+    background: rgba(255,61,127,.08);
+    border: 1px solid rgba(255,61,127,.35);
+    border-radius: 10px;
+    color: var(--hueso);
+}
+
+/* ============================================================
+   Idioma y volver
+   ============================================================ */
+.selector-idioma {
+    display: flex; align-items: center; gap: .25rem;
+    margin-left: .5rem; padding-left: .8rem;
+    border-left: 1px solid var(--borde);
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+}
+.selector-idioma .nav-link { opacity: .65; padding: .2rem .35rem !important; }
+.selector-idioma .nav-link:hover { opacity: 1; }
+.selector-idioma .nav-link::after { display: none; }
+.separador-idioma { color: var(--borde); }
+
+.enlace-volver {
+    display: inline-block; margin-bottom: 1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: .76rem;
+    color: var(--niebla);
+    transition: color .18s var(--curva), transform .18s var(--curva);
+}
+.enlace-volver:hover { color: var(--lima); transform: translateX(-4px); }
+
+/* ============================================================
+   Chat
+   ============================================================ */
+#boton-chat {
+    position: fixed; right: 20px; bottom: 20px; z-index: 1050;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: var(--lima); color: #0B0E14; border: none;
+    font-size: 1.5rem; cursor: pointer;
+    box-shadow: 0 10px 30px -8px rgba(198,255,61,.6);
+    transition: transform .25s var(--curva), box-shadow .25s var(--curva);
+}
+#boton-chat:hover {
+    transform: translateY(-5px) scale(1.06);
+    box-shadow: 0 16px 40px -8px rgba(198,255,61,.8);
+}
+#boton-chat.abierto { background: var(--grafito); color: var(--lima); }
+
+#cerrar-chat {
+    color: var(--niebla);
+    border: none;
+    background: transparent;
+    transition: color .18s var(--curva), transform .18s var(--curva);
+}
+#cerrar-chat:hover { color: var(--magenta); transform: rotate(90deg); }
+
+/* El panel arranca oculto. La clase .abierto la pone y la quita chat.js:
+   si falta esta regla, el chat se ve siempre y el boton de cerrar no
+   parece hacer nada. */
+#panel-chat {
+    position: fixed; right: 20px; bottom: 90px; z-index: 1050;
+    width: min(380px, calc(100vw - 40px));
+    background: var(--grafito);
+    border: 1px solid var(--borde);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,.95);
+
+    display: none;
+    opacity: 0;
+    transform: translateY(14px) scale(.97);
+    transform-origin: bottom right;
+    transition: opacity .22s var(--curva), transform .22s var(--curva);
+}
+#panel-chat.abierto {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+#chat-cabecera {
+    background: var(--noche);
+    border-bottom: 1px solid var(--borde);
+    padding: .9rem 1.1rem;
+}
+#chat-mensajes { height: 320px; overflow-y: auto; padding: 1rem; background: var(--asfalto); }
+
+.burbuja {
+    max-width: 82%;
+    padding: .6rem .85rem;
+    border-radius: 14px;
+    margin-bottom: .6rem;
+    font-size: .88rem;
+    line-height: 1.45;
+    animation: aparecer .25s var(--curva);
+}
+.burbuja.bot {
+    background: var(--grafito);
+    border: 1px solid var(--borde);
+    color: var(--hueso);
+}
+.burbuja.cliente {
+    background: var(--lima);
+    color: #0B0E14;
+    margin-left: auto;
+    font-weight: 500;
+}
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#chat-sugerencias { padding: 0 1rem .6rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+#chat-sugerencias .chip {
+    cursor: pointer;
+    color: var(--cian);
+    border-color: rgba(41,229,212,.4);
+    background: rgba(41,229,212,.07);
+    text-transform: none;
+    letter-spacing: .02em;
+    font-size: .72rem;
+    transition: transform .18s var(--curva), box-shadow .18s var(--curva);
+}
+#chat-sugerencias .chip:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--halo-cian);
+}
+
+.estrella-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--borde); font-size: 1.5rem; padding: 0 .1rem;
+    transition: color .15s var(--curva), transform .15s var(--curva);
+}
+.estrella-btn:hover, .estrella-btn.activa { color: var(--ambar); transform: scale(1.2); }
+
+/* ============================================================
+   Graficos del reporte
+   ============================================================ */
+.grafico { width: 100%; height: auto; display: block; }
+.grafico-anillo { width: 100%; max-width: 130px; height: auto; display: block; }
+
+/* ============================================================
+   Pie
+   ============================================================ */
+.pie {
+    background: var(--noche);
+    border-top: 1px solid var(--borde);
+    color: var(--niebla);
+    padding: 2.5rem 0 1.8rem;
+    margin-top: 4rem;
+}
+.pie a { color: var(--niebla); }
+.pie a:hover { color: var(--lima); }
+
+/* ============================================================
+   Impresion: el neon no se imprime.
+   Se invierte a tinta oscura sobre blanco para no gastar toner y
+   para que el PDF del navegador sea legible.
+   ============================================================ */
+@media print {
+    body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        background-image: none !important;
+    }
+    h1, h2, h3, .cifra, .precio, .acento { color: #000000 !important; }
+    .ficha, .tablero, .bloque-dato, .sugerencia {
+        background: #FFFFFF !important;
+        border: 1px solid #CCCCCC !important;
+        box-shadow: none !important;
+    }
+    .tabla-taller, .tabla-taller td, .tabla-taller th { color: #000000 !important; }
+    .barra, .pie, .no-imprimir, .enlace-volver,
+    #boton-chat, #panel-chat { display: none !important; }
+    .grafico, .grafico-anillo { page-break-inside: avoid; }
+}
+
+/* ============================================================
+   Accesibilidad: quien pidio menos movimiento no lo recibe.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+    .ficha:hover, .btn:hover, #boton-chat:hover { transform: none; }
+}
+
+/* Pie del widget de chat: la caja de escribir */
+.chat-pie {
+    background: var(--noche);
+    border-top: 1px solid var(--borde);
+}
+#chat-calificacion { background: var(--noche); border-top: 1px solid var(--borde); }
+
+/* ---------- Logo de marca ---------- */
+.marca-logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px var(--borde);
+}
+.marca-logo-grande {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px var(--borde), 0 8px 28px -6px rgba(198,255,61,.35);
+}

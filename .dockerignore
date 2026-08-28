@@ -1,0 +1,12 @@
+target/
+*.class
+.git/
+.gitignore
+documentacion-ciclo-vida/
+*.md
+*.png
+*.svg
+*.pdf
+.idea/
+*.iml
+.vscode/
