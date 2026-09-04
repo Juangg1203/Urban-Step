@@ -9,7 +9,7 @@ Documentado siguiendo el ciclo de vida completo del desarrollo de software:
 |---|---|
 | [01-Ingenieria-de-Requerimientos](01-Ingenieria-de-Requerimientos/) | Enunciado original, requisitos, historias de usuario, reglas de negocio, matriz de trazabilidad |
 | [02-Analisis](02-Analisis/) | 14 documentos Word: problema, actores, requisitos, casos de uso, priorizacion, trazabilidad, riesgos |
-| [03-Diseno](03-Diseno/) | Arquitectura, clases, secuencia, componentes, modelo de base de datos, diccionario de datos, interfaces, seguridad |
+| [03-Diseno](03-Diseno/) | 15 documentos Word: arquitectura, los 5 diagramas (arquitectura, casos de uso, componentes, despliegue, secuencia), modelo de datos, diccionario, API, interfaces, flujo documental, IA, decisiones tecnicas, seguridad |
 | [04-Desarrollo](04-Desarrollo/) | Codigo fuente organizado por capas (backend, frontend, database, configuracion) |
 | [05-Pruebas](05-Pruebas/) | Plan de pruebas, 28 casos de prueba, pruebas de integracion y usabilidad, matriz de trazabilidad |
 | [06-Implementacion](06-Implementacion/) | Manual de instalacion, configuracion de produccion, despliegue, manual de usuario, mantenimiento |
