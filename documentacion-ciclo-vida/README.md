@@ -8,7 +8,7 @@ Documentado siguiendo el ciclo de vida completo del desarrollo de software:
 | Fase | Contenido |
 |---|---|
 | [01-Ingenieria-de-Requerimientos](01-Ingenieria-de-Requerimientos/) | Enunciado original, requisitos, historias de usuario, reglas de negocio, matriz de trazabilidad |
-| [02-Analisis](02-Analisis/) | Actores, casos de uso, flujos de proceso, modelo de dominio |
+| [02-Analisis](02-Analisis/) | 14 documentos Word: problema, actores, requisitos, casos de uso, priorizacion, trazabilidad, riesgos |
 | [03-Diseno](03-Diseno/) | Arquitectura, clases, secuencia, componentes, modelo de base de datos, diccionario de datos, interfaces, seguridad |
 | [04-Desarrollo](04-Desarrollo/) | Codigo fuente organizado por capas (backend, frontend, database, configuracion) |
 | [05-Pruebas](05-Pruebas/) | Plan de pruebas, 28 casos de prueba, pruebas de integracion y usabilidad, matriz de trazabilidad |
@@ -21,7 +21,7 @@ el propio vendedor arma la compra por un cliente presencial ("venta asistida"). 
 comision se calcula por producto (cada uno tiene su propio porcentaje, definido por el
 Jefe) y solo se confirma cuando el pedido llega de verdad al cliente. Ver el detalle en
 `01-Ingenieria-de-Requerimientos/08-Reglas-de-Negocio.md` y en
-`02-Analisis/04-Flujos-de-Proceso.md`.
+`02-Analisis/09-Reglas-Negocio.docx`.
 
 ## Proyecto ejecutable
 
